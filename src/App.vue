@@ -1,28 +1,27 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <PathFinding></PathFinding>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import PathFinding from './components/PathFinding';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
+    PathFinding
+  } 
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+:root {
+  --grid-cols: 1;
+  --grid-rows: 1;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 </style>

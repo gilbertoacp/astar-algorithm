@@ -6,11 +6,15 @@
     @mouseup.prevent="mousePressed = false" 
   >
     <Node 
-      v-for="(node, index) of grid" 
+      v-for="(node, index) of templateBoard" 
       :key="index"
       :col="node.col"
       :row="node.row"
       :mousePressed="mousePressed"
+      :startNodeIsSet="startNode? true: false"
+      :endNodeIsSet="endNode? true: false"
+      @setStartNode="setStartNode"
+      @setEndNode="setEndNode"
     >
     </Node>
   </div>
@@ -21,32 +25,60 @@ import Node from './Node';
 
 export default {
   name: 'PathFinding',
-  props: {  },
   components: { Node },
+  props: {
+
+  },
   data: function() {
     return {
-      rows: 18,
-      cols: 35,
-      grid: [],
-      mousePressed: false
+      rows: 20,
+      cols: 40,
+      templateBoard: [],
+      board: [],
+      mousePressed: false,
+      startNode: null,
+      endNode: null,
+      openSet: [],
+      closedSet: []
     }
   },
   created: function() {
-    const {rows, cols, grid} = this.$data;
+    const { rows, cols, templateBoard } = this;
 
     for(let row = 1; row <= rows; row++) {
-
       for(let col = 1; col <= cols; col++) {
-        
-        grid.push({ row, col });
-      
+        templateBoard.push({ row, col });
+      }
+    }
+
+    this.board = this.$children;
+  },
+  methods: {
+    setStartNode: function (startNode) {
+      this.startNode = startNode;
+    },
+    setEndNode: function (endNode) {
+      this.endNode = endNode;
+    },
+    draw : function () {
+
+      let winner = 0;
+
+      if(this.openSet.length > 0) { 
+        console.log();
+
+        for (let i = 0; i < this.openSet.length; i++) {
+          if(this.openSet[i].f  < this.openSet[winner].f) {
+            //
+          }
+          
+        }
+
+      } else {
+        console.log();
       }
 
     }
-
-    console.log(grid);
-  },
-  methods: {
   }
 }
 </script>
@@ -54,12 +86,11 @@ export default {
 <style scoped>
 .grid {
   display: grid;
-  grid-template-rows: repeat(var(--grid-rows), 1fr );
+  grid-template-rows: repeat(auto-fill, 1fr);
   grid-template-columns: repeat(var(--grid-cols), 1fr );
   width: 100%;
-  height: 70%;
+  height: 75%;
   position: absolute;
   bottom: 0;
 }
-
 </style>

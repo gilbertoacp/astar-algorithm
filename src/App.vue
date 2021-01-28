@@ -1,14 +1,14 @@
 <template>
-  <PathFinding></PathFinding>
+  <NavControl></NavControl>
 </template>
 
 <script>
-import PathFinding from './components/PathFinding';
+import NavControl from './components/NavControl';
 
 export default {
   name: 'App',
   components: {
-    PathFinding
+    NavControl
   } 
 }
 </script>

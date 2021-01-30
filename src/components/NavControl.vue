@@ -7,8 +7,8 @@
       <span class="md-title">{{appName}}</span>
 
       <div class="md-toolbar-section-end">
-        <md-button>Start</md-button>
-        <md-button>Clear Board</md-button>
+        <md-button @click="state = 'start'">Start</md-button>
+        <md-button @click="state = 'clear'">Clear Board</md-button>
       </div>
     </md-toolbar>
 
@@ -41,7 +41,11 @@
     </md-drawer> -->
 
     <md-content>
-      <PathFinding></PathFinding>
+      <PathFinding 
+        :stateControl="state"
+        @state="state = $event" 
+      >
+      </PathFinding>
     </md-content>
   </div>
 </template>
@@ -51,11 +55,14 @@ import PathFinding from './PathFinding';
 
 export default {
    name: 'NavControl',
-   data: () => ({
-     showNavigation: false,
-     showSidepanel: false,
-     appName: 'A* PathFinding Visualization'
-   }),
+   data: function() {
+    return {
+      showNavigation: false,
+      showSidepanel: false,
+      appName: 'A* PathFinding Visualization',
+      state: 'none'
+    }
+   },
    components: {
      PathFinding
    }

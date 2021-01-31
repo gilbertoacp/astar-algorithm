@@ -7,6 +7,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'Node',
   props: {
@@ -20,7 +21,7 @@ export default {
     g: Number,
     h: Number,
     color: String
-  }
+  },
 }
 </script>
 

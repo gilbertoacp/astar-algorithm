@@ -2,7 +2,7 @@
   <div 
     class="grid"
     :style="{ '--grid-cols': cols, '--grid-rows': rows }" 
-    @mousemove="drawWalls"
+    @mousemove.prevent="drawWalls"
     @click.prevent="setStartNode"
     @contextmenu.prevent="setEndNode"
     >
@@ -23,7 +23,7 @@
 <script>
 import Node from './Node';
 import NodeModel from '../models/Node';
-import { Colors } from "../helpers";
+import { Colors, removeFromArrayBackwards, h } from "../helpers";
 
 export default {
   name: 'PathFinding',
@@ -40,7 +40,8 @@ export default {
       startNode: null,
       endNode: null,
       openSet: [],
-      closedSet: []
+      closedSet: [],
+      path: []
     }
   },
   created: function() {
@@ -57,9 +58,15 @@ export default {
         }
       }
 
+      for (let idx = 0; idx < board.length; idx++) 
+        board[idx].addNeighbors(board, rows, cols);
+        
+
+      console.log(this.board);
+
     },
     setStartNode: function (e) {
-
+      console.log(e);
       if(this.startNode)
         return;
 
@@ -70,6 +77,7 @@ export default {
         node.isStartNode = true;
         node.color = Colors.ORANGE;
         this.startNode = node;
+        this.openSet.push(node);
       }
 
     },
@@ -94,7 +102,68 @@ export default {
       return node;
     },
     startAlgorithm: function() {
-      
+
+      const { openSet, closedSet ,endNode, path } = this;
+
+      while(openSet.length > 0) {
+
+        let winner = 0;
+        for (let idx = 0; idx < openSet.length; idx++) {
+          if(openSet[idx].f < openSet[winner].f) {
+            winner = idx;
+          }
+        }
+
+        let current = openSet[winner];  
+
+        if(current.col === endNode.col && current.row === endNode.row) {
+          let temp = current;
+          
+          while(temp.previous) {
+            temp.color = Colors.GREEN;
+            path.push(temp.previous);
+            temp = temp.previous;
+          }
+
+          console.log('DONE');
+        }
+
+        removeFromArrayBackwards(openSet, current);
+        current.color = Colors.RED;
+        closedSet.push(current);
+
+        const neighbors = current.neighbors;
+
+        for (let idx = 0; idx < neighbors.length; idx++) {
+
+          const neighbor = neighbors[idx];
+
+          if( !closedSet.includes(neighbor) ) {
+
+            const tempG = current.g + 1;
+
+            if( openSet.includes(neighbor) ) {
+
+              if(tempG < neighbor.g) {
+
+                neighbor.g = tempG;
+
+              }
+
+            } else {
+            
+              neighbor.g = tempG;
+              neighbor.color = Colors.GREEN;
+              openSet.push(neighbor);
+            }
+
+            neighbor.h = h(neighbor, endNode);
+            neighbor.f = neighbor.g + neighbor.h; 
+            neighbor.previous = current;
+          }
+
+        }
+      } 
     },
     clearBoard: function() {
       this.startNode = null;

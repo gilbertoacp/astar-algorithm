@@ -20,3 +20,15 @@ export const Colors = {
   GREY: 'rgb(128, 128, 128)',
   TURQUOISE: 'rgb(64, 224, 208)'
 }
+
+export function removeFromArrayBackwards(arr, el) {
+  for (let idx = arr.length; idx >= 0; idx--) 
+    if(arr[idx] === el) 
+      arr.splice(idx, 1);
+}
+
+export function getNodeFromBoard(board, row, col) {
+  const result = board.filter(node => node.row === row && node.col === col);
+  const node = result[0];
+  return node;
+}

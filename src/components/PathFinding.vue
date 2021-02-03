@@ -15,6 +15,9 @@
         :isEndNode="point.isEndNode"
         :isBarrier="point.isBarrier"
         :color="point.color"
+        :f="point.f"
+        :g="point.g"
+        :h="point.h"
       >
       </Node>
   </div>
@@ -34,7 +37,7 @@ export default {
   data: function() {
     return {
       rows: 20,
-      cols: 40,
+      cols: 50,
       board: [],
       mousePressed: false,
       startNode: null,
@@ -52,27 +55,21 @@ export default {
 
       const { rows, cols, board } = this;
 
-      for(let x = 0; x < rows; x++) {
-        for(let y = 0; y < cols; y++) {
+      for(let x = 0; x < rows; x++) 
+        for(let y = 0; y < cols; y++) 
           board.push(new NodeModel(x, y));
-        }
-      }
 
-      for (let idx = 0; idx < board.length; idx++) 
-        board[idx].addNeighbors(board, rows, cols);
-        
-
-      console.log(this.board);
+      
 
     },
     setStartNode: function (e) {
-      console.log(e);
+
       if(this.startNode)
         return;
 
       const { row, col } = e.target.__vue__;
 
-      if(row && col) {
+      if(row !== null && col !== null) {
         const node = this.getNode(row, col);
         node.isStartNode = true;
         node.color = Colors.ORANGE;
@@ -88,12 +85,12 @@ export default {
 
       const { row, col } = e.target.__vue__;
 
-      if(row && col) {
+      if(row !== null && col !== null) {
         const node = this.getNode(row, col);
         node.isEndNode = true;
         node.color = Colors.TURQUOISE;
         this.endNode = node;
-      }
+      } 
 
     },
     getNode: function (row, col) {
@@ -103,33 +100,64 @@ export default {
     },
     startAlgorithm: function() {
 
-      const { openSet, closedSet ,endNode, path } = this;
+      const { openSet, closedSet ,endNode, path, board, cols, rows } = this;
 
+      let done = false;
+
+      for (let idx = 0; idx < board.length; idx++) 
+        board[idx].addNeighbors(board, rows, cols);
+
+      let idx = 0;
       while(openSet.length > 0) {
 
         let winner = 0;
-        for (let idx = 0; idx < openSet.length; idx++) {
-          if(openSet[idx].f < openSet[winner].f) {
+
+        console.log(++idx);
+
+        for (let idx = 0; idx < openSet.length; idx++) 
+          if(openSet[idx].f < openSet[winner].f) 
             winner = idx;
-          }
-        }
 
         let current = openSet[winner];  
 
         if(current.col === endNode.col && current.row === endNode.row) {
           let temp = current;
+          let first = true;
           
           while(temp.previous) {
-            temp.color = Colors.GREEN;
+
+            if(first) {
+              path.push(current);
+              first = false;
+            }
+
             path.push(temp.previous);
             temp = temp.previous;
+
           }
 
-          console.log('DONE');
+          // this.animateClosedSet();
+
+          // for(let idx = path.length - 1; idx >= 0; idx--) {
+
+          //   setTimeout(() => path[idx].color = Colors.BLUE, 300)
+            
+          // }
+
+          // console.log('open set => ', openSet);
+          // console.log('closed set => ', closedSet);
+          // console.log('path => ', path);
+          // console.log('DONE');
+
+          done = true;
+
+          break;
         }
 
         removeFromArrayBackwards(openSet, current);
-        current.color = Colors.RED;
+
+        // setTimeout(() => current.color = Colors.RED, 30)
+        
         closedSet.push(current);
 
         const neighbors = current.neighbors;
@@ -153,7 +181,7 @@ export default {
             } else {
             
               neighbor.g = tempG;
-              neighbor.color = Colors.GREEN;
+              // setTimeout(() => neighbor.color = Colors.GREEN, 30);
               openSet.push(neighbor);
             }
 
@@ -163,7 +191,21 @@ export default {
           }
 
         }
+
+        if( done ) {
+          console.log('Done');
+        } else {
+          console.log('No Solution');
+        }
+
       } 
+    },
+    animateClosedSet: function() {
+      const { closedSet } = this;
+
+      for (let idx = 0; idx < closedSet.length; idx++) {
+        setTimeout(() => closedSet[idx].color = Colors.RED, 10);        
+      }
     },
     clearBoard: function() {
       this.startNode = null;
@@ -211,7 +253,7 @@ export default {
   grid-template-rows: repeat(auto-fill, 1fr);
   grid-template-columns: repeat(var(--grid-cols), 1fr );
   width: 100%;
-  height: 75%;
+  height: 70%;
   position: absolute;
   bottom: 0;
 }

@@ -9,6 +9,9 @@ export default function NodeModel(row, col) {
   this.color = Colors.WHITE;
   this.neighbors = [];
   this.previous = null;
+  this.f = 0;
+  this.g = 0;
+  this.h = 0;
 
   this.clearNode = function() {
     this.isStartNode = false; 
@@ -23,33 +26,37 @@ export default function NodeModel(row, col) {
 
     if(row < totalRows - 1) {
 
-      this.neighbors.push(
-        getNodeFromBoard(board, row + 1, col)
-      );
+      const node = getNodeFromBoard(board, row + 1, col);
+      
+      if(node.isBarrier)
+        this.neighbors.push(node);
 
     }
 
     if(row > 0) {
 
-      this.neighbors.push(
-        getNodeFromBoard(board, row - 1, col)
-      );
+      const node = getNodeFromBoard(board, row - 1, col);
+
+      if(node.isBarrier)
+        this.neighbors.push(node);
     
     }
 
     if(col < totalCols - 1) {
 
-      this.neighbors.push(
-        getNodeFromBoard(board, row, col + 1)
-      );
+      const node = getNodeFromBoard(board, row, col + 1);
+
+      if(node.isBarrier)
+        this.neighbors.push(node);
 
     }
     
     if(col > 0) {
 
-      this.neighbors.push(
-        getNodeFromBoard(board, row, col - 1)
-      );
+      const node = getNodeFromBoard(board, row, col - 1);
+
+      if(node.isBarrier)
+        this.neighbors.push(node);
 
     }
 

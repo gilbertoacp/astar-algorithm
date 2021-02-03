@@ -11,7 +11,7 @@ export const h = (p1, p2) => {
 export const Colors = {
   RED: 'rgb(255, 0, 0)',
   GREEN:'rgb(0, 255, 0)',
-  BLUE: 'rgb(0, 255, 0)',
+  BLUE: 'rgb(0, 0, 255)',
   YELLOW: 'rgb(255, 255, 0)',
   WHITE: 'rgb(255, 255, 255)',
   BLACK: 'rgb(0, 0, 0)',

@@ -11,8 +11,6 @@ export default function NodeModel(row, col) {
   this.h = Infinity;
 
   this.clearNode = function() {
-    this.row = row; 
-    this.col = col; 
     this.color = Colors.WHITE;
     this.neighbors = [];
     this.previous = null;

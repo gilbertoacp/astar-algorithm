@@ -175,6 +175,18 @@ export default {
 
     },
     clearBoard: function() {
+      
+      this.startNode = null;
+      this.endNode = null;
+      this.openSet = [];
+      this.closedSet = [];
+      this.path = [];
+
+      for(let row = 0; row < this.rows; row++) 
+        for(let col = 0; col < this.cols; col++) 
+          this.board[row][col].clearNode();
+      
+      this.$forceUpdate();
     },
   },
   watch: {

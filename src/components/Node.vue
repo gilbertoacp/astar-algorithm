@@ -1,11 +1,10 @@
 <template>
   <div 
     class="node"
-    :style="{ 'background-color': color }"
-    :class="{ 
-      'visited': colors.RED === color || colors.GREEN === color, 
-      'path': colors.GREEN === color 
-    }"
+    @click.prevent="emitStartNode"
+    @contextmenu.prevent="emitEndNode"
+    @mousemove="emitBarrierNode"
+    :style="{'background-color': color}"
   >
   </div>
 </template>
@@ -16,36 +15,41 @@ import { Colors } from "../helpers";
 export default {
   name: 'Node',
   props: {
-    col: Number,
+    color: String,
     row: Number,
-    isStartNode: Boolean,
-    isEndNode: Boolean,
-    neighbors: [],
-    isBarrier: Boolean,
-    f: Number,
-    g: Number,
-    h: Number,
-    color: String
+    col: Number
   },
   data: function() {
     return {
-      colors: Colors
+      colors: Colors,
     }
-  }
+  },
+  methods: {
+    emitStartNode: function () {
+      const { row, col } = this;
+      this.$emit('startNode', { row, col });
+    },
+    emitEndNode: function () {
+      const { row, col } = this;
+      this.$emit('endNode', { row, col });
+    },
+    emitBarrierNode: function(e) {
+      if(e.ctrlKey) {
+        const { row, col } = this;
+        this.$emit('barrierNode', { row, col });
+      } 
+    }
+  },
 }
 </script>
 
 <style scoped>
 .node {
-  padding: 1em;
-  border: 1px solid rgb(150, 150, 150);
-  text-align: center;
   cursor: pointer;
-}
-
-/* .visited {
-  -webkit-animation: scale-up-center 0ms cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
-	animation: scale-up-center 0ms cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgb(150, 150, 150);
+  display: block;
 }
 
 .path {
@@ -97,6 +101,6 @@ export default {
             transform: translateZ(0);
     opacity: 1;
   }
-} */
+} 
 
 </style>

@@ -27,8 +27,9 @@ export function removeFromArrayBackwards(arr, el) {
       arr.splice(idx, 1);
 }
 
-export function getNodeFromBoard(board, row, col) {
-  const result = board.filter(node => node.row === row && node.col === col);
-  const node = result[0];
-  return node;
+export function flatten(arr) {
+  return arr.reduce(
+    (flat, toFlatten) => flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten)
+    , []
+  );
 }

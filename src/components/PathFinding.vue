@@ -30,7 +30,7 @@ export default {
   },
   data: function() {
     return {
-      rows: 20,
+      rows: 25,
       cols: 60,
       board: [],
       startNode: null,
@@ -38,7 +38,7 @@ export default {
       openSet: [],
       closedSet: [],
       path: [],
-      running: false,
+      canDrawWall: true,
     }
   },
   created: function() {
@@ -86,7 +86,7 @@ export default {
     },
     drawWall: function(pos) {
 
-      if(this.running) return;
+      if(!this.canDrawWall) return;
 
       const { row, col } = pos;
       
@@ -98,9 +98,12 @@ export default {
 
       setTimeout(() => {
         this.$set(this.board, row, posRow);
-      }, 10);
+      }, 15);
     },
     startAlgorithm: function() {
+
+      this.canDrawWall = false;
+      this.$emit('state', 'running');
 
       for(const row of this.board) 
         for(const node of row) 
@@ -140,7 +143,16 @@ export default {
 
           
           for(let idx = this.path.length - 1; idx >= 0; idx--) 
-            setTimeout(() => this.path[idx].setPath(), 100 / (idx + 1)); 
+            setTimeout(() => {
+
+              if(idx === 0) {
+                this.$emit('state', 'none');
+              }
+
+              this.path[idx].setPath();
+
+            }, 100 / (idx + 1)); 
+
 
           console.log('DONE');
           return;
@@ -171,11 +183,8 @@ export default {
       console.log('No Solution');
       return;
     },
-    reconstructPath: function() {
-
-    },
     clearBoard: function() {
-      
+      this.canDrawWall = true;
       this.startNode = null;
       this.endNode = null;
       this.openSet = [];
@@ -198,10 +207,11 @@ export default {
 
         case 'clear':
           this.clearBoard();
+          this.$emit('state', 'clear');
+          this.$emit('state', 'none');
         break;
       }
 
-      this.$emit('state', 'none');
     }
   }
 }

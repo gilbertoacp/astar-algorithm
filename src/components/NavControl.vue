@@ -5,12 +5,36 @@
       <span class="md-title">{{ appName }}</span>
 
       <div class="md-toolbar-section-end">
+        <md-button @click="instructions = true">How to use?</md-button>
         <md-button @click="state = 'start'" :disabled="isRunning">{{ isRunning ? 'Running': 'Start' }}</md-button>
-        <md-button @click="state = 'clear'">Clear Board</md-button>
+        <md-button @click="state = 'clear'" :disabled="isRunning">Clear Board</md-button>
       </div>
     </md-toolbar>
 
     <md-content>
+      <md-dialog
+        :md-active.sync="instructions"
+      >
+        <md-dialog-title>How to use?</md-dialog-title>
+
+        <md-list>
+          <md-list-item>
+            Left Click <code>Set Start</code>
+          </md-list-item>
+          
+          <md-list-item>
+            Right Click <code>Set End</code>
+          </md-list-item>
+
+          <md-list-item>
+            Ctrl + Hover <code>Draw a Wall</code>
+          </md-list-item>
+
+          <md-dialog-actions>
+          <md-button class="md-primary" @click="instructions = false">OK</md-button>
+        </md-dialog-actions>
+        </md-list>
+      </md-dialog>
 
       <Legend
         :items="legendItems"
@@ -38,7 +62,8 @@ export default {
       showNavigation: false,
       showSidepanel: false,
       appName: 'A* PathFinding Visualization',
-      state: 'none'
+      state: 'none',
+      instructions: false
     }
    },
    components: {

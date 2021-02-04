@@ -125,14 +125,22 @@ export default {
         ) {
 
           let temp = current;
+          let first = true;
 
           while(temp.previous) {
+
+            if(first) {
+              this.path.push(temp);
+              first = false;
+            }
+
             this.path.push(temp.previous);
             temp = temp.previous;
           }
 
-          for(const node of this.path) 
-            node.setPath();
+          
+          for(let idx = this.path.length - 1; idx >= 0; idx--) 
+            setTimeout(() => this.path[idx].setPath(), 100 / (idx + 1)); 
 
           console.log('DONE');
           return;
@@ -150,13 +158,14 @@ export default {
             neighbor.f = neighbor.g + neighbor.h;
 
             if(!this.openSet.includes(neighbor))  {
-              neighbor.setOpen();
+
+              setTimeout(() => neighbor.setOpen(), 1);
               this.openSet.push(neighbor);
             }
           }
         }
 
-        current.setClosed();
+        setTimeout(() => current.setClosed(), 1);
       } 
 
       console.log('No Solution');

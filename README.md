@@ -1,24 +1,6 @@
-# a-search-algorithm
+# A* Search Alogrithm Visualization
 
-## Project setup
-```
-npm install
-```
+A* search algorithm probably is one the best pathfinding algorithm, often used in many fields of computer science, since it uses heuristics to achieve a better performance and the shortest path
+[Click to see](https://en.wikipedia.org/wiki/A*_search_algorithm)
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+![alt text](readme-files/01.gif)

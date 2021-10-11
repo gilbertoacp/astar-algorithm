@@ -51,7 +51,6 @@ export default {
   },
   methods: {
     setUp : function() {
-
       for(let row = 0; row < this.rows; row++) {
         
         this.board[row] = [];
@@ -59,28 +58,33 @@ export default {
         for(let col = 0; col < this.cols; col++) 
           this.board[row].push(new NodeModel(row, col));
       }
-      
-     
     },
     setStartNode: function (pos) {
+      if(this.startNode) 
+        return;
+      
       const { row, col } = pos;
-
-      if(this.startNode) return;
-
       const posRow = this.board[row].slice(0);
-      posRow[col].setStartNode();
 
+      if(posRow[col].isEndNode() || posRow[col].isBarrier()) {
+        return;
+      }
+      
+      posRow[col].setStartNode();
       this.startNode = posRow[col];
       this.$set(this.board, row, posRow);
     },
     setEndNode: function (pos) {
+      if(this.endNode) 
+        return;
+      
       const { row, col } = pos;
-
-      if(this.endNode) return;
-
       const posRow = this.board[row].slice(0);
-      posRow[col].setEndNode();
 
+      if(posRow[col].isStartNode() || posRow[col].isBarrier()) {
+        return;
+      }
+      posRow[col].setEndNode();
       this.endNode = posRow[col];
       this.$set(this.board, row, posRow);
     },
@@ -142,7 +146,7 @@ export default {
           }
 
           
-          for(let idx = this.path.length - 1; idx >= 0; idx--) 
+          for(let idx = this.path.length - 1; idx >= 0; idx--) {
             setTimeout(() => {
 
               if(idx === 0) {
@@ -152,7 +156,7 @@ export default {
               this.path[idx].setPath();
 
             }, 100 / (idx + 1)); 
-
+          } 
 
           console.log('DONE');
           return;
@@ -170,16 +174,19 @@ export default {
             neighbor.f = neighbor.g + neighbor.h;
 
             if(!this.openSet.includes(neighbor))  {
-
               setTimeout(() => neighbor.setOpen(), 1);
               this.openSet.push(neighbor);
             }
           }
         }
 
-        setTimeout(() => current.setClosed(), 1);
+        setTimeout(() => {
+          current.setClosed();
+        }, 1);
+        
       } 
 
+      this.$emit('state', 'none');
       console.log('No Solution');
       return;
     },
